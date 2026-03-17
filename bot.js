@@ -8,7 +8,7 @@ const client = new Client({
     GatewayIntentBits.Guilds,
     GatewayIntentBits.GuildMessages,
     GatewayIntentBits.MessageContent,
-    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.DirectMessages,
   ]
 });
 
@@ -799,9 +799,74 @@ setInterval(async () => {
 
 }, 60000);
 
+// ============ TEST COMMANDS VIA DM ============
+client.on('messageCreate', async (message) => {
+  if (message.author.bot) return;
+  if (message.author.id !== OWNER_USER_ID) return;
+  if (message.guild) return;
+
+  const cmd = message.content.trim().toLowerCase();
+
+  if (cmd === '!help') {
+    await message.reply(
+      `**MoneyMatrix Data Hub — Test Commands**\n\n` +
+      `\`!feargreed\` — Fear & Greed image\n` +
+      `\`!watchlist\` — Stock deep dive image\n` +
+      `\`!heatmap\` — Sector heatmap image\n` +
+      `\`!earnings\` — Earnings calendar image\n` +
+      `\`!economic\` — Economic calendar\n` +
+      `\`!etf\` — ETF holdings image\n` +
+      `\`!close\` — Market close summary\n\n` +
+      `Each command posts directly to its channel! 🎯`
+    );
+  }
+
+  if (cmd === '!feargreed') {
+    await message.reply('⏳ Generating...');
+    await postFearGreed();
+    await message.reply('✅ Posted to #fear-greed!');
+  }
+  if (cmd === '!watchlist') {
+    await message.reply('⏳ Generating...');
+    await postDailyWatchlist();
+    await message.reply('✅ Posted to #daily-watchlist!');
+  }
+  if (cmd === '!heatmap') {
+    await message.reply('⏳ Generating...');
+    await postSectorHeatmap();
+    await message.reply('✅ Posted to #daily-watchlist!');
+  }
+  if (cmd === '!earnings') {
+    await message.reply('⏳ Generating...');
+    await postEarningsCalendar();
+    await message.reply('✅ Posted to #earnings-calendar!');
+  }
+  if (cmd === '!economic') {
+    await message.reply('⏳ Generating...');
+    await postEconomicCalendar();
+    await message.reply('✅ Posted to #economic-calendar!');
+  }
+  if (cmd === '!etf') {
+    await message.reply('⏳ Generating...');
+    await postETFHoldings();
+    await message.reply('✅ Posted to #etf-holdings!');
+  }
+  if (cmd === '!close') {
+    await message.reply('⏳ Generating...');
+    await postMarketClose();
+    await message.reply('✅ Posted to #daily-digest!');
+  }
+});
+
 // ============ BOT READY ============
 client.once('ready', async () => {
   console.log(`✅ ${client.user.tag} is online — MoneyMatrix Data Hub ready!`);
+  try {
+    const owner = await client.users.fetch(OWNER_USER_ID);
+    await owner.send(`✅ **MoneyMatrix Data Hub is online!**\n\nDM me \`!help\` to see test commands! 🎯`);
+  } catch (e) {
+    console.error('Owner DM error:', e.message);
+  }
 });
 
 client.login(process.env.DISCORD_BOT_TOKEN);
