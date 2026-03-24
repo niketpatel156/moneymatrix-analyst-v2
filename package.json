@@ -1,6 +1,6 @@
 {
-  "name": "moneymatrix-analyst-v2",
-  "version": "1.0.0",
+  "name": "moneymatrix-data-hub",
+  "version": "2.0.0",
   "main": "bot.js",
   "scripts": {
     "start": "node bot.js"
@@ -8,7 +8,7 @@
   "dependencies": {
     "discord.js": "^14.0.0",
     "node-fetch": "^2.6.9",
-    "xml2js": "^0.6.2",
+    "node-cron": "^3.0.3",
     "puppeteer": "^21.0.0"
   },
   "engines": {
